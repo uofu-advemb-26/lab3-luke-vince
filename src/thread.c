@@ -17,6 +17,7 @@ SemaphoreHandle_t semaphore;
 int counter;
 int on;
 
+// Adding 1 to counter and printing something every tenth of a second.
 void side_thread(void *params)
 {
 	while (1) {
@@ -26,6 +27,7 @@ void side_thread(void *params)
 	}
 }
 
+// Turning an LED on or off and incrementing counter every tenth of a second.
 void main_thread(void *params)
 {
 	while (1) {
