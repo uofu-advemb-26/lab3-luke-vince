@@ -53,3 +53,13 @@ int main(void)
     vTaskStartScheduler();
 	return 0;
 }
+
+
+/*PREDICTION: Since the semaphore isn't currently being used at all, it is likely that
+the counter value is going to be incrementing unpredictably. As a result, main and
+side-thread might not necessarily increment in consistent ways as they print their
+values out. In other words, there is going to be a race condition between the two threads.*/
+
+/*REALITY: Exactly that has happened; we saw the output mostly alternate, but every so
+often one thread might run twice compared to the other, leading to the incrementing pattern
+being thrown off*/
