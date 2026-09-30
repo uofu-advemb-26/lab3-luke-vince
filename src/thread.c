@@ -17,7 +17,7 @@ SemaphoreHandle_t semaphore;
 int counter;
 int on;
 
-void counterFunc(char *callSrc, SemaphoreHandle_t semaphore, int *counter, int timeoutPeriod) {
+int counterFunc(char *callSrc, SemaphoreHandle_t semaphore, int *counter, int timeoutPeriod) {
     if(xSemaphoreTake(semaphore, timeoutPeriod) == 0) {
         return pdFAIL;      //indicate that the function call has failed because the semaphore isn't available
     }
