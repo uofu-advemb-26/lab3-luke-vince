@@ -17,13 +17,28 @@ SemaphoreHandle_t semaphore;
 int counter;
 int on;
 
+void counterFunc(char *callSrc, SemaphoreHandle_t semaphore, int *counter, int timeoutPeriod) {
+    if(xSemaphoreTake(semaphore, timeoutPeriod) == 0) {
+        return pdFAIL;      //indicate that the function call has failed because the semaphore isn't available
+    }
+
+    //if xSemaphoreTake didn't return a 0 then we have successfully acquired the semaphore
+    else {
+        (*counter)++;
+        printf("hello world from %s! Count %d\n", callSrc, *counter);
+    }
+    xSemaphoreGive(semaphore);      //release the semaphore
+    return pdTRUE;
+}
+
 // Adding 1 to counter and printing something every tenth of a second.
 void side_thread(void *params)
 {
 	while (1) {
         vTaskDelay(100);
-        counter += 1;
-		printf("hello world from %s! Count %d\n", "thread", counter);
+        // counter += 1;
+		// printf("hello world from %s! Count %d\n", "thread", counter);
+        counterFunc("thread", semaphore, &counter, 500);
 	}
 }
 
@@ -33,7 +48,8 @@ void main_thread(void *params)
 	while (1) {
         cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, on);
         vTaskDelay(100);
-		printf("hello world from %s! Count %d\n", "main", counter++);
+		// printf("hello world from %s! Count %d\n", "main", counter++);
+        counterFunc("main", semaphore, &counter, 500);
         on = !on;
 	}
 }
