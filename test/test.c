@@ -6,7 +6,7 @@
 #include "unity_config.h"
 #include "pico/cyw43_arch.h"
 #include <semphr.h>
-#include "thread.h"
+#include "threadhelpers.h"
 
 void setUp(void) {}
 

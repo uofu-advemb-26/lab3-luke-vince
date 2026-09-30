@@ -5,7 +5,7 @@
 #include <pico/stdlib.h>
 #include <pico/multicore.h>
 #include <pico/cyw43_arch.h>
-#include "thread.h"
+#include "threadhelpers.h"
 
 #define MAIN_TASK_PRIORITY      ( tskIDLE_PRIORITY + 1UL )
 #define MAIN_TASK_STACK_SIZE configMINIMAL_STACK_SIZE
@@ -17,20 +17,6 @@ SemaphoreHandle_t semaphore;
 
 int counter;
 int on;
-
-int counterFunc(char *callSrc, SemaphoreHandle_t semaphore, int *counter, int timeoutPeriod) {
-    if(xSemaphoreTake(semaphore, timeoutPeriod) == 0) {
-        return pdFAIL;      //indicate that the function call has failed because the semaphore isn't available
-    }
-
-    //if xSemaphoreTake didn't return a 0 then we have successfully acquired the semaphore
-    else {
-        (*counter)++;
-        printf("hello world from %s! Count %d\n", callSrc, *counter);
-    }
-    xSemaphoreGive(semaphore);      //release the semaphore
-    return pdTRUE;
-}
 
 // Adding 1 to counter and printing something every tenth of a second.
 void side_thread(void *params)
