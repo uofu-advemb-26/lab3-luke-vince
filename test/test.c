@@ -1,3 +1,4 @@
+#include "FreeRTOS.h"
 #include <stdio.h>
 #include <pico/stdlib.h>
 #include <stdint.h>
@@ -5,6 +6,7 @@
 #include "unity_config.h"
 #include "pico/cyw43_arch.h"
 #include <semphr.h>
+#include "thread.h"
 
 void setUp(void) {}
 
