@@ -134,7 +134,7 @@ printf("Testing orphaned lock code\n");
 /**
  * We have to split off the test runner into its own task so that it gets a priority assignment that we have control over
  */
-void test_runner(void) {
+void test_runner(__unused void *args) {
     while (1) {
         sleep_ms(5000); // Give time for TTY to attach.
         printf("Start tests\n");
