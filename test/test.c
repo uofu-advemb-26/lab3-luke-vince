@@ -4,7 +4,6 @@
 #include <pico/stdlib.h>
 #include <stdint.h>
 #include <unity.h>
-#include "unity_config.h"
 #include <pico/cyw43_arch.h>
 #include <semphr.h>
 #include "threadhelpers.h"
