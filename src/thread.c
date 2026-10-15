@@ -42,7 +42,8 @@ void main_thread(void *params)
         // counter is shared between threads
         xSemaphoreTake(semaphore, timeoutPeriod);
         {
-		    printf("hello world from %s! Count %d\n", "main", counter++);
+            counter++;
+		    printf("hello world from %s! Count %d\n", "main", counter);
         }
         xSemaphoreGive(semaphore);
         on = !on;
