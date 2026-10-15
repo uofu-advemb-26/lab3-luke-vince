@@ -43,6 +43,12 @@ void test_main_count()
     TEST_ASSERT_TRUE_MESSAGE(counter == 1, "Count is not chill");
 }
 
+void deadlock_test()
+{
+    bool deadlockOccured = deadlock();
+    TEST_ASSERT_TRUE_MESSAGE(deadlockOccured, "Deadlock didn't occur I guess.");
+}
+
 int main (void)
 {
     stdio_init_all();
