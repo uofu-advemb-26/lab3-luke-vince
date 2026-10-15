@@ -17,20 +17,24 @@ SemaphoreHandle_t semaphore;
 int counter;
 int on;
 
+// Execution context
 void side_thread(void *params)
 {
 	while (1) {
         vTaskDelay(100);
+        // counter is shared between threads
         counter += 1;
 		printf("hello world from %s! Count %d\n", "thread", counter);
 	}
 }
 
+// Execution context
 void main_thread(void *params)
 {
 	while (1) {
         cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, on);
         vTaskDelay(100);
+        // counter is shared between threads
 		printf("hello world from %s! Count %d\n", "main", counter++);
         on = !on;
 	}
@@ -44,8 +48,10 @@ int main(void)
     counter = 0;
     TaskHandle_t main, side;
     semaphore = xSemaphoreCreateCounting(1, 1);
+    // Start main thread
     xTaskCreate(main_thread, "MainThread",
                 MAIN_TASK_STACK_SIZE, NULL, MAIN_TASK_PRIORITY, &main);
+    // Start side thread
     xTaskCreate(side_thread, "SideThread",
                 SIDE_TASK_STACK_SIZE, NULL, SIDE_TASK_PRIORITY, &side);
     vTaskStartScheduler();
