@@ -4,3 +4,9 @@
 void countAndPrintSide(SemaphoreHandle_t semaphore, int timeoutPeriod, int *counter);
 
 void countAndPrintMain(SemaphoreHandle_t semaphore, int timeoutPeriod, int *counter);
+
+void deadlock(void);
+
+bool deadlockOccured(void);
+
+void cleanupDeadlock();

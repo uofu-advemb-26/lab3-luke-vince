@@ -45,22 +45,49 @@ void test_main_count()
 
 void deadlock_test()
 {
-    bool deadlockOccured = deadlock();
-    TEST_ASSERT_TRUE_MESSAGE(deadlockOccured, "Deadlock didn't occur I guess.");
+    printf("Beginning of Deadlock Test\n");
+    deadlock();
+    printf("After method before delay.\n");
+    // Wait for the functions to timeout.
+    vTaskDelay(200);
+    printf("After 200ms delay\n");
+    vTaskDelay(200);
+    printf("After 400ms delay\n");
+    vTaskDelay(200);
+    printf("After 600ms delay\n");
+    vTaskDelay(1400);
+    
+    printf("After method after delay.\n");
+
+    TEST_ASSERT_TRUE_MESSAGE(deadlockOccured(), "Neither task timed out while waiting for the other semaphore.");
+    printf("After assert statement\n");
+    cleanupDeadlock();
+    printf("After call to cleanup\n");
 }
 
-int main (void)
-{
-    stdio_init_all();
+void run_tests(void * params) {
     while (1) {
-        sleep_ms(5000); // Give time for TTY to attach.
+        sleep_ms(15000); // Give time for TTY to attach.
         printf("Start tests\n");
         UNITY_BEGIN();
         RUN_TEST(test_variable_assignment);
         RUN_TEST(test_multiplication);
         RUN_TEST(test_side_count);
         RUN_TEST(test_main_count);
+        RUN_TEST(deadlock_test);
         sleep_ms(5000);
         UNITY_END();
     }
+}
+
+int main (void)
+{
+    stdio_init_all();
+    // Create the task
+    xTaskCreate(run_tests, "RunTests", configMINIMAL_STACK_SIZE * 4, NULL, 1, NULL);
+    // Start the scheduler
+    vTaskStartScheduler();
+
+    printf("This should never happen.  This is after vTaskStartscheduler().");
+    
 }
