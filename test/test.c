@@ -73,6 +73,20 @@ void test_orphaned_lock() {
     TEST_ASSERT_TRUE_MESSAGE(deadlocked, "Deadlock didn't occur.");
 }
 
+void test_not_orphaned_lock() {
+    printf("Before call to call_not_orphaned_lock\n");
+    bool deadlocked = call_not_orphaned_lock();
+    printf("After call to call_not_orphaned_lock.\n");
+    TEST_ASSERT_FALSE_MESSAGE(deadlocked, "Deadlock occured.");
+}
+
+void test_orphaned_lock_functionality() {
+    call_not_orphaned_lock();
+    // printedValue must always be even
+    TEST_ASSERT_TRUE_MESSAGE(((getPrintedValue() % 2) == 0), "The value is actually odd sadly.");
+    printf("Orphaned lock functionality test finished.");
+}
+
 void run_tests(void * params) {
     while (1) {
         sleep_ms(15000); // Give time for TTY to attach.
@@ -84,6 +98,8 @@ void run_tests(void * params) {
         RUN_TEST(test_main_count);
         RUN_TEST(deadlock_test);
         RUN_TEST(test_orphaned_lock);
+        RUN_TEST(test_not_orphaned_lock);
+        RUN_TEST(test_orphaned_lock_functionality);
         sleep_ms(5000);
         UNITY_END();
     }

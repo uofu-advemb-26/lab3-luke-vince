@@ -12,3 +12,7 @@ bool deadlockOccured(void);
 void cleanupDeadlock();
 
 bool call_orphaned_lock(void);
+
+bool call_not_orphaned_lock(void);
+
+int getPrintedValue();
