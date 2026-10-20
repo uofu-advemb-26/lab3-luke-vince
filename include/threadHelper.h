@@ -10,3 +10,5 @@ void deadlock(void);
 bool deadlockOccured(void);
 
 void cleanupDeadlock();
+
+bool call_orphaned_lock(void);

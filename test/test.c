@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <pico/stdlib.h>
 #include <stdint.h>
+#include <stdbool.h>
 #include <unity.h>
 #include "unity_config.h"
 #include "threadHelper.h"
@@ -65,6 +66,13 @@ void deadlock_test()
     printf("After call to cleanup\n");
 }
 
+void test_orphaned_lock() {
+    printf("Before call to call_orphaned_lock\n");
+    bool deadlocked = call_orphaned_lock();
+    printf("After call to call_orphaned_lock.\n");
+    TEST_ASSERT_TRUE_MESSAGE(deadlocked, "Deadlock didn't occur.");
+}
+
 void run_tests(void * params) {
     while (1) {
         sleep_ms(15000); // Give time for TTY to attach.
@@ -75,6 +83,7 @@ void run_tests(void * params) {
         RUN_TEST(test_side_count);
         RUN_TEST(test_main_count);
         RUN_TEST(deadlock_test);
+        RUN_TEST(test_orphaned_lock);
         sleep_ms(5000);
         UNITY_END();
     }

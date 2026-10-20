@@ -6,6 +6,9 @@
 TickType_t timeout = pdMS_TO_TICKS(1000);
 SemaphoreHandle_t semA;
 SemaphoreHandle_t semB;
+SemaphoreHandle_t semC;
+TaskHandle_t orphaned_lock_handle;
+int orphanCounter = 0;
 
 volatile bool func1TimedOut;
 volatile bool func2TimedOut;
@@ -84,5 +87,34 @@ bool deadlockOccured(void) {
 void cleanupDeadlock(void) {
     vSemaphoreDelete(semA);
     vSemaphoreDelete(semB);
+}
+
+void orphaned_lock(void * params)
+{
+    while (1) {
+        xSemaphoreTake(semC, timeout);
+        orphanCounter++;
+        if (orphanCounter % 2) {
+            continue;
+        }
+        printf("Count %d\n", orphanCounter);
+        xSemaphoreGive(semC);
+    }
+}
+
+bool call_orphaned_lock(void) {
+    semC = xSemaphoreCreateCounting(1, 1);
+
+    xTaskCreate(orphaned_lock, "OrphanedLock", 256, NULL, 1, &orphaned_lock_handle);
+    vTaskDelay(500);
+    eTaskState method_state = eTaskGetState(orphaned_lock_handle);
+    vTaskSuspend(orphaned_lock_handle);
+    vTaskDelete(orphaned_lock_handle);
+
+    bool is_method_blocked = method_state == eBlocked;
+
+    vSemaphoreDelete(semC);
+
+    return is_method_blocked;
 }
 
