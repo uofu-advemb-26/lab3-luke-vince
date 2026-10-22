@@ -6,3 +6,4 @@ log
 *-asciinema
 *.pid
 *-profile
+CMakeCache.txt
